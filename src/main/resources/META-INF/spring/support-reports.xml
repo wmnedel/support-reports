@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+  
+  
+      <bean parent="jobSchedulingBean">
+        <property name="ramJob" value="false"/>
+        <property name="trigger">
+            <bean class="org.quartz.CronTrigger">
+                <property name="name" value="ReferentielJobTrigger"/>
+                <property name="cronExpression" value="${topPagesCronExp:0 0 9 ? * MON}"/>
+            </bean>
+        </property>
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.JobDetailBean">
+                <property name="name" value="supportreports"/>
+                <property name="group" value="SupportReports"/>
+                <property name="jobClass" value="org.foo.modules.reports.ReportsAction"/>
+                <property name="description" value="Job to generate periodic support reports" />
+                <property name="jobDataAsMap">
+                    <map>
+                        <entry key="tag" value="jahia" />
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+</beans>
+
