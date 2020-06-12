@@ -61,7 +61,11 @@ public class ReportsAction extends QuartzJobBean {
                         String message = "";
 
                         for (String headerElement : tableHeader.eachText()) {
-                            message += String.format("%s: %s\t", headerElement, rowValues.get(rowIterator));
+                            try {
+                                message += String.format("%s: %s\t", headerElement, rowValues.get(rowIterator));
+                            } catch (IndexOutOfBoundsException e) {
+                                message += String.format("%s: %s\t", headerElement, "-");
+                            }
                             rowIterator++;
                         }
 
