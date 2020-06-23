@@ -54,7 +54,7 @@
     <groupId>org.foo.modules</groupId>
     <artifactId>support-reports</artifactId>
     <name>support-reports</name>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2</version>
     <packaging>bundle</packaging>
     <description>This is the custom module (support-reports) for running on a Jahia server.</description>
 
@@ -62,7 +62,7 @@
         <connection>scm:git:git@github.com:wmnedel/support-reports.git</connection>
         <developerConnection>scm:git:git@github.com:wmnedel/support-reports.git</developerConnection>
         <url>https://github.com/wmnedel/support-reports.git</url>
-        <tag>HEAD</tag>
+        <tag>support-reports-1.0.2</tag>
     </scm>
 
     <properties>
