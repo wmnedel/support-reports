@@ -1,5 +1,6 @@
 package org.foo.modules.reports;
 
+import org.jahia.commons.encryption.EncryptionUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 public class Configuration {
 
@@ -30,23 +32,35 @@ public class Configuration {
         ConfigurationAdmin configAdminService = (ConfigurationAdmin) bundleContext.getService(configAdminServiceRef);
         Dictionary<String, Object> cfg = configAdminService.getConfiguration(configurationFile, null).getProperties();
 
+        Hashtable<String, String> newCfg = new Hashtable<>();
+
         for (Enumeration<String> e = cfg.keys(); e.hasMoreElements(); ) {
             String key = e.nextElement();
             Object val = cfg.get(key);
+            String valStr = val.toString();
+            newCfg.put(key, valStr);
             if (key != null && key.equals("confluenceUser")) {
-                setConfluenceUser(val.toString());
+                setConfluenceUser(valStr);
             } else if (key != null && key.equals("confluencePassword")) {
-                setConfluencePassword(val.toString());
+                try {
+                    setConfluencePassword(EncryptionUtils.passwordBaseDecrypt(valStr));
+                } catch (Exception e1) {
+                    String encryptedPassword = EncryptionUtils.passwordBaseEncrypt(valStr);
+                    setConfluencePassword(valStr);
+                    newCfg.put(key,encryptedPassword);
+                }
             } else if (key != null && key.equals("confluenceUrl")) {
-                setConfluenceUrl(val.toString());
+                setConfluenceUrl(valStr);
             } else if (key != null && key.equals("confluencePageIdList")) {
-                setConfluencePageIdList(val.toString().split(","));
+                setConfluencePageIdList(valStr.split(","));
             } else if (key != null && key.equals("slackWebhook")) {
-                setSlackWebhook(val.toString());
+                setSlackWebhook(valStr);
             } else {
                 logger.debug(String.format("Key %s not recognized. Skipping...", key));
             }
         }
+
+        configAdminService.getConfiguration(configurationFile, null).update(newCfg);
     }
 
     public String getConfluenceUser() {
