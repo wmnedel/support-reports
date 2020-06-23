@@ -87,8 +87,13 @@ public class ReportsAction extends QuartzJobBean {
         try {
             this.bundleConfig = new Configuration(SUPPORT_REPORTS_CONFIGURATION_FILE);
             this.confluenceObj = new Confluence(bundleConfig.getConfluenceUrl(), bundleConfig.getConfluenceUser(), bundleConfig.getConfluencePassword());
+        } catch (IOException e) {
+            logger.error(String.format("IOException while reading bundle configuration: %s", e));
+            return;
+        }
 
-            for (String pageId : bundleConfig.getConfluencePageIdList()) {
+        for (String pageId : bundleConfig.getConfluencePageIdList()) {
+            try {
                 String message = getCurrentScheduleEntry(pageId);
                 String pageTitle = confluenceObj.getPageTitle(pageId);
 
@@ -98,13 +103,10 @@ public class ReportsAction extends QuartzJobBean {
                 } else {
                     logger.error(String.format("Could not get information from page %s", pageId));
                 }
+            } catch (JSONException e) {
+                logger.error("Could not get information from Confluence REST API: %s", e);
+                continue;
             }
-        } catch (IOException | NullPointerException e) {
-            logger.error(String.format("IOException while reading bundle configuration: %s", e));
-        } catch (IllegalArgumentException e) {
-            logger.error(String.format("IllegalArgumentException while processing Confluence table: %s", e));
-        } catch (JSONException e) {
-            logger.error("Could not get information from Confluence REST API: %s", e);
         }
     }
 }
