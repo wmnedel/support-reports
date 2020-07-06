@@ -8,7 +8,7 @@
         <property name="ramJob" value="false"/>
         <property name="trigger">
             <bean class="org.quartz.CronTrigger">
-                <property name="name" value="ReferentielJobTrigger"/>
+                <property name="name" value="SupportReportsTrigger"/>
                 <property name="cronExpression" value="${topPagesCronExp:0 0 9 ? * MON}"/>
             </bean>
         </property>
