@@ -133,6 +133,8 @@ public class ReportsAction extends BackgroundJob {
             }
         } catch (IOException e) {
             logger.error(String.format("Error initializing configuration: %s", e.toString()));
+            jobDataMap.put(BackgroundJob.JOB_STATUS, BackgroundJob.STATUS_FAILED);
+            return;
         }
 
         for (String pageId : bundleConfig.getConfluencePageIdList()) {
