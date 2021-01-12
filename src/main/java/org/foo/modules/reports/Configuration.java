@@ -16,6 +16,8 @@ import java.util.Hashtable;
 
 public class Configuration {
 
+    private String cronExpression;
+
     private String confluenceUser;
     private String confluencePassword;
     private String confluenceUrl;
@@ -49,6 +51,8 @@ public class Configuration {
                     setConfluencePassword(valStr);
                     newCfg.put(key,encryptedPassword);
                 }
+            } else if (key != null && key.equals("cronExpression")) {
+                setCronExpression(valStr);
             } else if (key != null && key.equals("confluenceUrl")) {
                 setConfluenceUrl(valStr);
             } else if (key != null && key.equals("confluencePageIdList")) {
@@ -102,5 +106,9 @@ public class Configuration {
     public void setSlackWebhook(String slackWebhook) {
         this.slackWebhook = slackWebhook;
     }
+
+    public String getCronExpression() { return cronExpression; }
+
+    public void setCronExpression(String cronExpression) { this.cronExpression = cronExpression; }
 
 }
