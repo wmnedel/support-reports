@@ -106,6 +106,8 @@ public class ReportsAction extends BackgroundJob {
         jobDetail = BackgroundJob.createJahiaJob("Support Team - Job to read Confluence and send notifications through Slack", ReportsAction.class);
         if (schedulerService.getAllJobs(jobDetail.getGroup()).isEmpty() && SettingsBean.getInstance().isProcessingServer()) {
 
+            jobDetail.setDurability(false);
+
             CronTrigger trigger = new CronTrigger("SupportReportsTrigger", jobDetail.getGroup(), bundleConfig.getCronExpression());
 
             schedulerService.getScheduler().scheduleJob(jobDetail, trigger);
